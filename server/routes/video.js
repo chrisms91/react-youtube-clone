@@ -5,6 +5,7 @@ const ffmpeg = require('fluent-ffmpeg');
 
 const { auth } = require('../middleware/auth');
 const multer = require('multer');
+const { Video } = require('../models/Video');
 
 // STORAGE MULTER CONFIG
 let storage = multer.diskStorage({
@@ -42,7 +43,17 @@ router.post('/uploadfiles', (req, res) => {
     });
   });
 });
-module.exports = router;
+
+router.post('/uploadvideo', (req, res) => {
+  // SAVE INFORMATION ABOUT VIDEO
+  // variables from client is in req.body
+
+  const video = new Video(req.body);
+  video.save((err, doc) => {
+    if (err) return res.json({ success: false, err });
+    res.status(200).json({ success: true });
+  });
+});
 
 router.post('/thumbnail', (req, res) => {
   let filePath = '';
@@ -84,4 +95,5 @@ router.post('/thumbnail', (req, res) => {
       filename: 'thumbnail-%b.png',
     });
 });
+
 module.exports = router;

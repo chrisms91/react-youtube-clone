@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Typography, Button, Form, Input, Icon } from 'antd';
 import Dropzone from 'react-dropzone';
+import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -18,7 +19,8 @@ const categoryOptions = [
   { value: 3, label: 'Pets & Animals' },
 ];
 
-const VideoUploadPage = () => {
+const VideoUploadPage = (props) => {
+  const user = useSelector((state) => state.user.userData); // from redux state store
   const [videoTitle, setVideoTitle] = useState('');
   const [videoDescription, setVideoDescription] = useState('');
   const [isPrivate, setIsPrivate] = useState(0);
@@ -45,10 +47,6 @@ const VideoUploadPage = () => {
 
   const onClickBtn = (e) => {
     console.log('clicked');
-  };
-
-  const onSubmitForm = (e) => {
-    console.log('submit');
   };
 
   const onDrop = (files) => {
@@ -87,13 +85,41 @@ const VideoUploadPage = () => {
     });
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    // grab userdata from redux store
+    const variables = {
+      writer: user._id,
+      title: videoTitle,
+      description: videoDescription,
+      privacy: isPrivate,
+      category: category,
+      filePath: filePath,
+      duration: fileDuration,
+      thumbnail: thumbnailPath,
+    };
+
+    axios.post('/api/video/uploadvideo', variables).then((response) => {
+      if (response.data.success) {
+        //success upload
+        message.success('Video is uploded successfully.');
+        setTimeout(() => {
+          props.history.push('/');
+        }, 3000);
+      } else {
+        alert('Failed uploading video.');
+      }
+    });
+  };
+
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <Title level={2}>Upload Video</Title>
       </div>
 
-      <Form onSubmit={onSubmitForm}>
+      <Form onSubmit={onSubmit}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Drop zone */}
           <Dropzone onDrop={onDrop} multiple={false} maxSize={100000000}>
@@ -155,7 +181,7 @@ const VideoUploadPage = () => {
         </select>
         <br />
         <br />
-        <Button type="primary" size="large" onClick={onClickBtn}>
+        <Button type="primary" size="large" onClick={onSubmit}>
           Submit
         </Button>
       </Form>
