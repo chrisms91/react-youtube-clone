@@ -30,6 +30,16 @@ const upload = multer({ storage: storage }).single('file');
 //             Video
 //=================================
 
+router.get('/getVideos', (req, res) => {
+  // GET VIDEOS FROM DB
+  Video.find()
+    .populate('writer')
+    .exec((err, videos) => {
+      if (err) return res.status(400).json({ success: false, err });
+      return res.status(200).json({ success: true, videos });
+    });
+});
+
 router.post('/uploadfiles', (req, res) => {
   // SAVE VIDEOS IN THE SERVER
   upload(req, res, (err) => {
