@@ -6,12 +6,13 @@ import LandingPage from './views/LandingPage/LandingPage.js';
 import LoginPage from './views/LoginPage/LoginPage.js';
 import RegisterPage from './views/RegisterPage/RegisterPage.js';
 import VideoUploadPage from './views/VideoUploadPage/VideoUploadPage';
+import VideoDetailPage from './views/VideoDetailPage/VideoDetailPage';
 import NavBar from './views/NavBar/NavBar';
 import Footer from './views/Footer/Footer';
 
 //null   Anyone Can go inside
 //true   only logged in user can go inside
-//false  logged in user can't go inside
+//false  logged in user can't go insideeee
 
 function App() {
   return (
@@ -26,6 +27,11 @@ function App() {
             exact
             path="/video/upload"
             component={Auth(VideoUploadPage, true)}
+          />
+          <Route
+            exact
+            path="/video/:videoId"
+            component={Auth(VideoDetailPage, null)}
           />
         </Switch>
       </div>

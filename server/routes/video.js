@@ -17,6 +17,7 @@ let storage = multer.diskStorage({
   },
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname);
+    console.log(ext);
     if (ext !== '.mp4') {
       return cb(res.status(400).end('only mp4 is allowed'), false);
     }
@@ -24,19 +25,47 @@ let storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage }).single('file');
+const upload = multer({
+  storage: storage,
+}).single('file');
 
 //=================================
 //             Video
 //=================================
+
+router.get('/getVideoDetail', (req, res) => {
+  // GET VIDEO DETAIL FROM DB
+  Video.findOne({
+    _id: req.query.videoId,
+  })
+    .populate('writer')
+    .exec((err, videoDetail) => {
+      if (err)
+        return res.status(400).json({
+          success: false,
+          err,
+        });
+      return res.status(200).json({
+        success: true,
+        videoDetail,
+      });
+    });
+});
 
 router.get('/getVideos', (req, res) => {
   // GET VIDEOS FROM DB
   Video.find()
     .populate('writer')
     .exec((err, videos) => {
-      if (err) return res.status(400).json({ success: false, err });
-      return res.status(200).json({ success: true, videos });
+      if (err)
+        return res.status(400).json({
+          success: false,
+          err,
+        });
+      return res.status(200).json({
+        success: true,
+        videos,
+      });
     });
 });
 
@@ -44,7 +73,10 @@ router.post('/uploadfiles', (req, res) => {
   // SAVE VIDEOS IN THE SERVER
   upload(req, res, (err) => {
     if (err) {
-      return res.json({ success: false, err });
+      return res.json({
+        success: false,
+        err,
+      });
     }
     return res.json({
       success: true,
@@ -60,8 +92,14 @@ router.post('/uploadvideo', (req, res) => {
 
   const video = new Video(req.body);
   video.save((err, doc) => {
-    if (err) return res.json({ success: false, err });
-    res.status(200).json({ success: true });
+    if (err)
+      return res.json({
+        success: false,
+        err,
+      });
+    res.status(200).json({
+      success: true,
+    });
   });
 });
 
@@ -94,7 +132,10 @@ router.post('/thumbnail', (req, res) => {
     })
     .on('error', (err) => {
       console.error(err);
-      return res.json({ success: false, err });
+      return res.json({
+        success: false,
+        err,
+      });
     })
     .screenshots({
       // Will take screenshots at 20%, 40%, 60% and 80% of the vi
