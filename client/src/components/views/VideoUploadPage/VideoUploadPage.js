@@ -45,10 +45,6 @@ const VideoUploadPage = (props) => {
     setCategory(e.currentTarget.value);
   };
 
-  const onClickBtn = (e) => {
-    console.log('clicked');
-  };
-
   const onDrop = (files) => {
     let formData = new FormData();
     const config = {

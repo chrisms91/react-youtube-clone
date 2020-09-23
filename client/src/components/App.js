@@ -4,6 +4,7 @@ import Auth from '../hoc/auth';
 // pages for this product
 import LandingPage from './views/LandingPage/LandingPage.js';
 import LoginPage from './views/LoginPage/LoginPage.js';
+import SubscriptionPage from './views/SubscriptionPage/SubscriptionPage';
 import RegisterPage from './views/RegisterPage/RegisterPage.js';
 import VideoUploadPage from './views/VideoUploadPage/VideoUploadPage';
 import VideoDetailPage from './views/VideoDetailPage/VideoDetailPage';
@@ -32,6 +33,11 @@ function App() {
             exact
             path="/video/:videoId"
             component={Auth(VideoDetailPage, null)}
+          />
+          <Route
+            exact
+            path="/subscription"
+            component={Auth(SubscriptionPage, true)}
           />
         </Switch>
       </div>
