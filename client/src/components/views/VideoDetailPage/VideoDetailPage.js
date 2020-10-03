@@ -4,6 +4,7 @@ import { Row, Col, List, Avatar } from 'antd';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
+import LikeDislikes from './Sections/LikeDislikes';
 
 const VideoDetailPage = (props) => {
   const videoId = props.match.params.videoId;
@@ -31,8 +32,6 @@ const VideoDetailPage = (props) => {
       .get('/api/comment/getComments', { params: { postId: videoId } })
       .then((response) => {
         if (response.data.success) {
-          console.log('getCOmments');
-          console.log(response.data.comments);
           setComments(response.data.comments);
         } else {
           alert('Failed to get comments data.');
@@ -70,7 +69,17 @@ const VideoDetailPage = (props) => {
               src={`http://localhost:5000/${videoDetail.filePath}`}
               controls
             />
-            <List.Item style={{ display: 'flex' }} actions={[subscribeBtn]}>
+            <List.Item
+              style={{ display: 'flex' }}
+              actions={[
+                <LikeDislikes
+                  video
+                  userId={localStorage.getItem('userId')}
+                  videoId={videoId}
+                />,
+                subscribeBtn,
+              ]}
+            >
               <List.Item.Meta
                 avatar={<Avatar src={videoDetail.writer.image} />}
                 title={videoDetail.writer.name}

@@ -25,11 +25,13 @@ const ReplyComment = (props) => {
         {comment.responseTo === parentCommentId && (
           <div style={{ width: '80%', marginLeft: '40px' }}>
             <SingleComment
+              key={props.postId}
               refreshComments={props.refreshComments}
               comment={comment}
               postId={props.postId}
             />
             <ReplyComment
+              key={comment._id}
               refreshComments={props.refreshComments}
               postId={props.postId}
               parentCommentId={comment._id}

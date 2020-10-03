@@ -40,27 +40,6 @@ const Comment = (props) => {
       <p>Replies</p>
       <hr />
 
-      {/* Comment Lists */}
-      {props.commentLists &&
-        props.commentLists.map(
-          (comment, index) =>
-            !comment.responseTo && (
-              <>
-                <SingleComment
-                  refreshComments={props.refreshComments}
-                  comment={comment}
-                  postId={videoId}
-                />
-                <ReplyComment
-                  postId={videoId}
-                  parentCommentId={comment._id}
-                  commentLists={props.commentLists}
-                  refreshComments={props.refreshComments}
-                />
-              </>
-            )
-        )}
-
       {/* Root Comment Form */}
 
       <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
@@ -75,6 +54,29 @@ const Comment = (props) => {
           Submit
         </button>
       </form>
+      <br />
+      {/* Comment Lists */}
+      {props.commentLists &&
+        props.commentLists.map(
+          (comment, index) =>
+            !comment.responseTo && (
+              <>
+                <SingleComment
+                  key={videoId}
+                  refreshComments={props.refreshComments}
+                  comment={comment}
+                  postId={videoId}
+                />
+                <ReplyComment
+                  key={index}
+                  postId={videoId}
+                  parentCommentId={comment._id}
+                  commentLists={props.commentLists}
+                  refreshComments={props.refreshComments}
+                />
+              </>
+            )
+        )}
     </div>
   );
 };
